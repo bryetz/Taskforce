@@ -1,38 +1,121 @@
+/* App.css */
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+  background-color: #121212; /* Dark theme background */
+  color: #fff;
+}
+
+.App-banner {
+  background-color: #333; /* A more subtle color for the banner */
+  color: #61dafb; /* A soft blue color for the text */
+  padding: 15px 0;
+  width: 100%;
+  text-align: center;
+  font-size: 1.8em;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  padding-top: 80px; /* Increased padding to account for the fixed banner */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+}
+
+.App-header {
+  margin-bottom: 20px;
+}
+
+.App-header h1 {
+  font-size: 2em;
+  margin: 20px 0;
+}
+
+.Prompt-buttons {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-bottom: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+.Prompt-button {
+  background: #444; /* Darker button background for contrast */
+  color: #fff;
+  border: 1px solid #555; /* Add a subtle border */
+  padding: 15px 20px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  font-size: 1em;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.Prompt-button:hover {
+  background-color: #555; /* Lighter background on hover */
+  transform: translateY(-2px);
+}
+
+.Input-container {
+  position: relative;
+  width: 60%; /* Adjust width as desired */
+  max-width: 800px; /* Maximum width */
+  margin: 20px auto;
+}
+
+.Input-area {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #555; /* Define a border to help the area stand out */
+  color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 1em;
+  resize: none; /* Disable resize handle */
+}
+
+.Submit-icon {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #61dafb; /* Soft blue color for the icon */
+  cursor: pointer;
+  font-size: 2em;
+}
+
+.Submit-icon:hover {
+  color: #9befff; /* Lighter blue on hover */
+}
+
+.Response-area {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px 0;
+  word-wrap: break-word;
+  width: 60%; /* Adjust width as desired */
+  max-width: 800px; /* Maximum width */
+  margin: auto;
+}
+
+@media (max-width: 768px) {
+  .Input-container, .Response-area {
+    width: 90%;
   }
-  to {
-    transform: rotate(360deg);
+
+  .Prompt-button {
+    padding: 10px;
+    margin: 5px;
+    font-size: 0.9em;
   }
 }

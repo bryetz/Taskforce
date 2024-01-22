@@ -27,14 +27,14 @@ def input():
             f"Then list the tasks, with each task linked to an EXISTING agent's role and give each agent a task. "
             f"Ensure the tasks are sequential, each building on the previous, "
             f"leading to a final deliverable task that synthesizes all insights into a comprehensive and intelligent response. "
-            f"Every line in the response MUST start with 'Agent:' or 'Task:'"
+            f"Every line in the response MUST start with 'Agent:' or 'Task:' with a maximum of 3 agents and 3 tasks."
             f"Lines should not be numbered, bulleted, or starred in order to be parsable.\n\n"
             f"REQUIRED Response format (SHOULD CONTAIN ONLY THIS AND NOTHING ELSE):"
             f"Agent: [Role]; [Goal]; [Backstory]"
             f"... (additional agents as necessary)"
             f"Task: [Agent's Role]; [Task Description]"
-            f"... (additional tasks as necessary, each building upon the last)"
-        )
+            f"... (additional tasks as necessary, each building upon the last and corresponding to an agent above)"
+           )
 
         generation_result = ollama_llm.generate([instruction])
         print("Generation: ", generation_result)

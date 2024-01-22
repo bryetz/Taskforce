@@ -1,39 +1,69 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { FaPaperPlane } from 'react-icons/fa'; // Importing the paper plane icon from react-icons
 import './App.css';
-import React from 'react';
 
 function App() {
+  const [data, setData] = useState("");
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [data, setData] = React.useState("");
-  const [input, setInput] = React.useState("");
+  const examplePrompts = [
+    "Analyze the latest market trends for Nvidia, ServiceNow, and AMD and summarize key factors that could influence their stock performance in the upcoming quarter.",
+    "Generate a template for a monthly newsletter that highlights company updates, industry news, and features a spotlight on a standout employee or customer story.",
+    "Develop a week-long itinerary for a business trip to New York City that balances client meetings, networking events, and personal downtime effectively.",
+    "Outline the steps required to migrate a small business's customer database from a local server to a cloud-based solution, ensuring minimal service disruption."
+  ];
 
-  const submitData = () => {
-    setData("Loading...");
+  const submitData = (prompt = input) => {
+    setIsLoading(true);
+    setData("");
     fetch('http://127.0.0.1:5000/api', {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        // mode: "no-cors", // no-cors, *cors, same-origin
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: "omit", // include, *same-origin, omit
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(input)
+      method: "POST",
+      headers: {
+        "Content-Type": 'application/json',
+      },
+      body: JSON.stringify(prompt)
     })
-        .then(response => {
-          return response.text();
-        })
-        .then(response => setData(response))
-        .catch(err => setData("There was an error."));
+    .then(response => response.text())
+    .then(response => {
+      setData(response);
+      setIsLoading(false);
+    })
+    .catch(err => {
+      setData("There was an error processing your request.");
+      setIsLoading(false);
+    });
+  }
+
+  const setExampleInputAndSubmit = (prompt) => {
+    setInput(prompt);
+    submitData(prompt);
   }
 
   return (
     <div className="App">
-      <p></p>
-      <textarea type="text" rows={12} value={input} onChange={e => setInput(e.target.value)} style={{width: '600px'}} />
-      <p></p>
-      <button onClick={submitData}>Submit</button>
-      <p>{data}</p>
+      <div className="App-banner">TaskForces.ai</div>
+      <header className="App-header">
+        <h1>How can I help you today?</h1>
+      </header>
+      <div className="Prompt-buttons">
+        {examplePrompts.map((prompt, index) => (
+          <button key={index} onClick={() => setExampleInputAndSubmit(prompt)} className="Prompt-button">
+            {prompt}
+          </button>
+        ))}
+      </div>
+      <div className="Input-container">
+        <textarea 
+          className="Input-area"
+          placeholder="Or type your question here..." 
+          rows={4} 
+          value={input} 
+          onChange={e => setInput(e.target.value)}
+        />
+        <FaPaperPlane className="Submit-icon" onClick={() => submitData()} />
+      </div>
+      <div className="Response-area">{isLoading ? 'Loading...' : data}</div>
     </div>
   );
 }
