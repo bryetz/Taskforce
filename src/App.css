@@ -119,3 +119,27 @@ body, html {
     font-size: 0.9em;
   }
 }
+
+.agent-row, .task-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin-bottom: 5px;
+  position: relative;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #333;
+}
+
+.delete-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.delete-icon:hover {
+  color: #ff4c4c;
+}

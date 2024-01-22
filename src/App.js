@@ -1,11 +1,62 @@
 import React, { useState } from 'react';
-import { FaPaperPlane } from 'react-icons/fa'; // Importing the paper plane icon from react-icons
+import { FaPaperPlane } from 'react-icons/fa';
 import './App.css';
+
+function createKey() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+
+  for (let i = 0; i < 8; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
+}
+
+function AgentRow(props) {
+  return (
+    <div className="agent-row">
+      <input value="AGENT" disabled style={{ height: '50px', textAlign: 'center' }} />
+      <textarea placeholder="Role" value={props.role} onChange={(e) => props.updateAgent(props.id, 'role', e.target.value)} style={{ height: '50px' }} />
+      <textarea placeholder="Goal" value={props.goal} onChange={(e) => props.updateAgent(props.id, 'goal', e.target.value)} style={{ height: '50px' }} />
+      <textarea placeholder="Backstory" value={props.backstory} onChange={(e) => props.updateAgent(props.id, 'backstory', e.target.value)} style={{ height: '50px' }} />
+      <span className="delete-icon" onClick={() => props.deleteAgent(props.id)}>X</span>
+    </div>
+  );
+}
+
+function TaskRow(props) {
+  return (
+    <div className="task-row">
+      <input value="TASK" disabled style={{ height: '50px', textAlign: 'center' }} />
+      <textarea placeholder="Role" value={props.role} onChange={(e) => props.updateTask(props.id, 'role', e.target.value)} style={{ height: '50px' }} />
+      <textarea placeholder="Description" value={props.description} onChange={(e) => props.updateTask(props.id, 'description', e.target.value)} style={{ height: '50px' }} />
+      <span className="delete-icon" onClick={() => props.deleteTask(props.id)}>X</span>
+    </div>
+  );
+}
 
 function App() {
   const [data, setData] = useState("");
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const [agents, setAgents] = useState([
+    {
+      role: "Fact Checker",
+      goal: "Provide a factual statement about an animal",
+      backstory: "Specializes in verifying information about animals",
+      id: createKey()
+    }
+  ]);
+  const [tasks, setTasks] = useState([
+    {
+      role: "Fact Checker",
+      description: "Provide an interesting factual statement about a specific animal",
+      id: createKey()
+    }
+  ]);
 
   const examplePrompts = [
     "Analyze the latest market trends for Nvidia, ServiceNow, and AMD and summarize key factors that could influence their stock performance in the upcoming quarter.",
@@ -40,6 +91,42 @@ function App() {
     submitData(prompt);
   }
 
+  const addAgent = () => {
+    setAgents([...agents, { id: createKey() }]);
+  };
+
+  const addTask = () => {
+    setTasks([...tasks, { id: createKey() }]);
+  };
+
+  const deleteAgent = (id) => {
+    setAgents(agents.filter((agent) => agent.id !== id));
+  };
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const updateAgent = (id, prop, value) => {
+    let updatedAgents = agents.map(agent => {
+      if (agent.id === id) {
+        return { ...agent, [prop]: value };
+      }
+      return agent;
+    });
+    setAgents(updatedAgents);
+  };
+
+  const updateTask = (id, prop, value) => {
+    let updatedTasks = tasks.map(task => {
+      if (task.id === id) {
+        return { ...task, [prop]: value };
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+  };
+
   return (
     <div className="App">
       <div className="App-banner">TaskForces.ai</div>
@@ -64,6 +151,37 @@ function App() {
         <FaPaperPlane className="Submit-icon" onClick={() => submitData()} />
       </div>
       <div className="Response-area">{isLoading ? 'Loading...' : data}</div>
+
+      <div>
+        <h2>Agents</h2>
+        {agents.map((agent) => (
+          <AgentRow 
+            key={agent.id}
+            id={agent.id}
+            role={agent.role}
+            goal={agent.goal}
+            backstory={agent.backstory}
+            deleteAgent={deleteAgent}
+            updateAgent={updateAgent}
+          />
+        ))}
+        <button onClick={addAgent}>Add Agent +</button>
+      </div>
+
+      <div>
+        <h2>Tasks</h2>
+        {tasks.map((task) => (
+          <TaskRow 
+            key={task.id}
+            id={task.id}
+            role={task.role}
+            description={task.description}
+            deleteTask={deleteTask}
+            updateTask={updateTask}
+          />
+        ))}
+        <button onClick={addTask}>Add Task +</button>
+      </div>
     </div>
   );
 }
