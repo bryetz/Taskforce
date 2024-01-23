@@ -193,7 +193,9 @@ function App() {
             updateAgent={updateAgent}
           />
         ))}
-        <button onClick={addAgent}>Add Agent +</button>
+        <button onClick={addAgent} className="button-common add-button">
+          Add Agent +
+        </button>
       </div>
 
       <div>
@@ -208,11 +210,13 @@ function App() {
             updateTask={updateTask}
           />
         ))}
-        <button onClick={addTask}>Add Task +</button>
+        <button onClick={addTask} className="button-common add-button">
+          Add Task +
+        </button>
       </div>
 
       {/* Button to process agents and tasks */}
-      <button onClick={processAgentsAndTasks} className="Process-button">
+      <button onClick={processAgentsAndTasks} className="button-common process-button">
         Process Agents and Tasks
       </button>
     </div>
