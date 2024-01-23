@@ -44,22 +44,22 @@ function App() {
 
   const [agents, setAgents] = useState([
     {
-      role: "Fact Checker",
-      goal: "Provide a factual statement about an animal",
-      backstory: "Specializes in verifying information about animals",
+      role: "",
+      goal: "",
+      backstory: "",
       id: createKey()
     }
   ]);
   const [tasks, setTasks] = useState([
     {
-      role: "Fact Checker",
-      description: "Provide an interesting factual statement about a specific animal",
+      role: "",
+      description: "",
       id: createKey()
     }
   ]);
 
   const examplePrompts = [
-    "Analyze the latest market trends for Nvidia, ServiceNow, and AMD and summarize key factors that could influence their stock performance in the upcoming quarter.",
+    "Analyze the latest market trends for NVIDIA, ServiceNow, and AMD and summarize key factors that could influence their stock performance in the upcoming quarter.",
     "Generate a template for a monthly newsletter that highlights company updates, industry news, and features a spotlight on a standout employee or customer story.",
     "Develop a week-long itinerary for a business trip to New York City that balances client meetings, networking events, and personal downtime effectively.",
     "Outline the steps required to migrate a small business's customer database from a local server to a cloud-based solution, ensuring minimal service disruption."
@@ -68,12 +68,40 @@ function App() {
   const submitData = (prompt = input) => {
     setIsLoading(true);
     setData("");
-    fetch('http://127.0.0.1:5000/api', {
+    fetch('http://127.0.0.1:5000/api/generate', {
       method: "POST",
       headers: {
         "Content-Type": 'application/json',
       },
       body: JSON.stringify(prompt)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(response => {
+      setAgents(response.agents.map(agent => ({...agent, id: createKey()})));
+      setTasks(response.tasks.map(task => ({...task, id: createKey()})));
+      setIsLoading(false);
+    })
+    .catch(err => {
+      console.error("Fetch error: ", err);
+      setData("There was an error processing your request.");
+      setIsLoading(false);
+    });
+};
+
+  const processAgentsAndTasks = () => {
+    // Send the agents and tasks back to the backend for final processing
+    const data = { agents, tasks };
+    fetch('http://127.0.0.1:5000/api/process', {
+      method: "POST",
+      headers: {
+        "Content-Type": 'application/json',
+      },
+      body: JSON.stringify(data)
     })
     .then(response => response.text())
     .then(response => {
@@ -84,7 +112,7 @@ function App() {
       setData("There was an error processing your request.");
       setIsLoading(false);
     });
-  }
+  };
 
   const setExampleInputAndSubmit = (prompt) => {
     setInput(prompt);
@@ -182,6 +210,11 @@ function App() {
         ))}
         <button onClick={addTask}>Add Task +</button>
       </div>
+
+      {/* Button to process agents and tasks */}
+      <button onClick={processAgentsAndTasks} className="Process-button">
+        Process Agents and Tasks
+      </button>
     </div>
   );
 }
