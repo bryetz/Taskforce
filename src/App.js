@@ -157,7 +157,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className="App-banner">TaskForces.ai</div>
+      <div className="App-banner">agenerative.com</div>
       <header className="App-header">
         <h1>How can I help you today?</h1>
       </header>
